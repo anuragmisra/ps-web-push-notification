@@ -18,3 +18,8 @@ The output may look like the following
     Computing checksum with shasum -a 256
     Checksums matched!
     Now using node v12.16.1 (npm v6.13.4)
+
+### Installing `ExpressJS`
+```
+npm install express
+```
