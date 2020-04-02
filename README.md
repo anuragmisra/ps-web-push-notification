@@ -23,3 +23,8 @@ The output may look like the following
 ```
 npm install express
 ```
+
+### Start the Server
+```
+npm start
+```
