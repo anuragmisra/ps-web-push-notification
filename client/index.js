@@ -20,7 +20,6 @@ const client = (() => {
 
                 // 07 - Notification with a body
                 body: "Alert!! This is image notification",
-                
             }
             reg.showNotification("Yay! It works", options)
         }
