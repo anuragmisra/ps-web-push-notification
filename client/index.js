@@ -10,8 +10,23 @@ const client = (() => {
     }
 
     const sendNotification = () => {
-        // todo - start here
-        console.log("sending notification!")
+        // 05 - Show Text Notification
+        const simpleTextNotification = (reg => reg.showNotification("Yay! It works!"))
+
+        // 06 - Notification with Image
+        const imageWithTextNotification = (reg) => {
+            const options = {
+                icon: "imgs/notification.png",
+
+                // 07 - Notification with a body
+                body: "Alert!! This is image notification",
+                
+            }
+            reg.showNotification("Yay! It works", options)
+        }
+
+        navigator.serviceWorker.getRegistration()
+        .then(registration => imageWithTextNotification(registration))
     }
 
     const checkNotificationsSupport = () => {
