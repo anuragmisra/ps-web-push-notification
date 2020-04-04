@@ -96,6 +96,16 @@ const client = (() => {
 
         const unsubscribeUser = () => {
             console.log("unsubscribing user")
+            serviceWorkerRegObject.pushManager.getSubscription()
+                .then(subscription => {
+                    if (subscription) return subscription.unsubscribe()
+                })
+                .then(() => {
+                    isUserSubscribed = false
+                    pushButton.innerText = "ENABLE PUSH NOTIFICATIONS"
+                    pushButton.style.backgroundColor = "#efb1ff"
+                })
+                .catch(err => console.err("Failed to unsubscribe from Push Service.", err))
         }
 
         function urlB64ToUint8Array(url) {
@@ -126,11 +136,11 @@ const client = (() => {
                 applicationServerKey: applicationServerKey
             })
                 .then(subscription => {
-                    console.log(subscription)
+                    console.log(JSON.stringify(subscription))
                     isUserSubscribed = true
                     // todo: HTTP POST to save subscription on server
                 })
-                .catch(err => console.err("Failed to subscribe user to Push Service.", err))
+                .catch(err => console.err("Failed to subscribe to Push Service.", err))
 
         }
 

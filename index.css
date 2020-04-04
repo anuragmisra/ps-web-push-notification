@@ -52,8 +52,3 @@ button {
 #btn-push {
     background-color: #efb1ff;
 }
-
-.disabled {
-    background-color: #4cd3c2;
-    cursor: not-allowed;
-}
