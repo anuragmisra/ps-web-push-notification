@@ -94,6 +94,7 @@ const client = (() => {
     const setupPush = () => {
         let isUserSubscribed = false;
 
+        // 05.03 - unsubscribe
         const unsubscribeUser = () => {
             console.log("unsubscribing user")
             serviceWorkerRegObject.pushManager.getSubscription()
