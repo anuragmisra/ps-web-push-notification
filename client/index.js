@@ -20,6 +20,11 @@ const client = (() => {
 
                 // 07 - Notification with a body
                 body: "Alert!! This is image notification",
+
+                // 09 - Actions on notification click (see sw.js for log)
+                actions: [
+                    {action: "search", title: "Try Google!"},
+                ],
             }
             reg.showNotification("Yay! It works", options)
         }
