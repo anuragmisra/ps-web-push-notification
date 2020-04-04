@@ -23,6 +23,11 @@ self.addEventListener('notificationclick', event => {
 })
 
 self.addEventListener('push', event => {
+    const transaction = JSON.parse(event.data.text());
     console.log(event.data.text())
-    self.registration.showNotification(event.data.text());
+
+    const options = { body: transaction.business }
+    const transactionType = transaction.type === "deposit" ? '+' : '-'
+
+    self.registration.showNotification(`${transactionType} ` + transaction.amount, options);
 })
