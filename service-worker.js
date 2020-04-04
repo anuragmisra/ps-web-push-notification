@@ -12,4 +12,5 @@ self.addEventListener('notificationclick', event => {
     // console.log("notification click", event)
     
     console.log(`action=${event.action}`)
+    console.log(`data=${JSON.stringify(event.notification.data)}`)
 })

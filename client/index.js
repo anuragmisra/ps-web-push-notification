@@ -27,6 +27,10 @@ const client = (() => {
                     // 10 - More Actions
                     {action: "close", title: "Forget it!"},
                 ],
+                data: {
+                    notificationTime: Date.now(),
+                    githubUser: "hhimanshu"
+                }
             }
             reg.showNotification("Yay! It works", options)
         }
