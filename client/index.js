@@ -23,7 +23,9 @@ const client = (() => {
 
                 // 09 - Actions on notification click (see sw.js for log)
                 actions: [
-                    {action: "search", title: "Try Google!"},
+                    {action: "search", title: "Try Searching!"},
+                    // 10 - More Actions
+                    {action: "close", title: "Forget it!"},
                 ],
             }
             reg.showNotification("Yay! It works", options)
@@ -46,7 +48,7 @@ const client = (() => {
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // https://developer.mozilla.org/en-US/docs/Web/API/Push_API#Push_concepts_and_usage
-                console.log("ServiceWorker and Push API support is available.")
+                // console.log("ServiceWorker and Push API support is available.")
             })
         } else {
             return Promise.reject("serviceWorker support is not available.")
@@ -54,7 +56,7 @@ const client = (() => {
 
         // 02 - register serviceWorker
         return navigator.serviceWorker.register('service-worker.js').then(swRegObj => {
-            console.log("ServiceWorker is registered", swRegObj)
+            // console.log("ServiceWorker is registered", swRegObj)
             serviceWorkerRegObject = swRegObj;
 
             // 03 - Enable Notifications Subscribe Button
@@ -65,7 +67,7 @@ const client = (() => {
     const requestNotificationPermission = () => {
         // 04 - Request Notification Permission
         return Notification.requestPermission(status => {
-            console.log("Notification Permission Status: ", status)
+            // console.log("Notification Permission Status: ", status)
 
             if (status !== 'granted') {
                 notificationButton.style.backgroundColor = "#4cd3c2"
@@ -78,6 +80,6 @@ const client = (() => {
     checkNotificationsSupport()
         .then(registerServiceWorker)
         .then(requestNotificationPermission)
-        .then(() => console.log("registered service worker and requested notification permission"))
+        // .then(() => console.log("registered service worker and requested notification permission"))
         .catch(err => console.error(err))
 })()
