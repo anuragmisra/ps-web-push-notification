@@ -130,7 +130,7 @@ const client = (() => {
             pushButton.style.backgroundColor = "#ea9085"
 
             // Note: get using web-push command
-            const applicationServerPublicKey = 'BFCV2QdN0JH3f5EAf6PaA4lEOsKZTcmxI9f4aLyNv3paUF-NOf6dt-6uulkwYaq2q6017X1G3Tga4sKkPVv0gtI';
+            const applicationServerPublicKey = 'BM4KIuyRbYzTHmkQ23ooGyXsK1E85C7cNPINtriy2vbz9KX4eLxu_8A-AXz8LUCHqp4vFqFPlmK_o4zS5kCa1Rg';
             const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
             serviceWorkerRegObject.pushManager.subscribe({
                 userVisibleOnly: true,
@@ -141,7 +141,7 @@ const client = (() => {
                     isUserSubscribed = true
                     // todo: HTTP POST to save subscription on server
                 })
-                .catch(err => console.err("Failed to subscribe to Push Service.", err))
+                .catch(err => console.error("Failed to subscribe to Push Service.", err))
 
         }
 

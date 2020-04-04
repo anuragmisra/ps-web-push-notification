@@ -21,3 +21,7 @@ self.addEventListener('notificationclick', event => {
         clients.openWindow(`https://giphy.com/gifs/the-secret-life-of-pets-happy-relax-26hisjy85ML01lqH6/fullscreen`)
     }
 })
+
+self.addEventListener('push', event => {
+    console.log(event.data.text())
+})
