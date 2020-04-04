@@ -25,5 +25,5 @@ let f = () => webPush.sendNotification(
     options
 );
 
-f() // for one-time notification
-// setInterval(f, 3000) // for recurring notification
+// f() // for one-time notification
+setInterval(f, 3000) // for recurring notification

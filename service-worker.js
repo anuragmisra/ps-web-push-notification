@@ -10,7 +10,7 @@ self.addEventListener('notificationclose', event => {
 
 self.addEventListener('notificationclick', event => {
     // console.log("notification click", event)
-    
+
     // console.log(`action=${event.action}`)
     // console.log(`data=${JSON.stringify(event.notification.data)}`)
 
@@ -24,4 +24,5 @@ self.addEventListener('notificationclick', event => {
 
 self.addEventListener('push', event => {
     console.log(event.data.text())
+    self.registration.showNotification(event.data.text());
 })
