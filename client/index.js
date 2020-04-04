@@ -15,6 +15,7 @@ const client = (() => {
 
         // 06 - Notification with Image
         const imageWithTextNotification = (reg) => {
+            // more options at https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification#Syntax
             const options = {
                 icon: "imgs/notification.png",
 
