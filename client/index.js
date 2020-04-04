@@ -3,6 +3,7 @@
 const client = (() => {
     let serviceWorkerRegObject = undefined;
     const notificationButton = document.getElementById("btn-notify");
+    const pushButton = document.getElementById("btn-push");
 
     const showNotificationButton = () => {
         notificationButton.style.display = "block"
@@ -24,9 +25,9 @@ const client = (() => {
 
                 // 09 - Actions on notification click (see sw.js for log)
                 actions: [
-                    {action: "search", title: "Try Searching!"},
+                    { action: "search", title: "Try Searching!" },
                     // 10 - More Actions
-                    {action: "close", title: "Forget it!"},
+                    { action: "close", title: "Forget it!" },
                 ],
                 data: {
                     notificationTime: Date.now(),
@@ -37,7 +38,7 @@ const client = (() => {
         }
 
         navigator.serviceWorker.getRegistration()
-        .then(registration => imageWithTextNotification(registration))
+            .then(registration => imageWithTextNotification(registration))
     }
 
     const checkNotificationsSupport = () => {
@@ -75,7 +76,7 @@ const client = (() => {
             // console.log("Notification Permission Status: ", status)
 
             if (status !== 'granted') {
-                notificationButton.style.backgroundColor = "#4cd3c2"
+                notificationButton.disabled = true
                 notificationButton.style.cursor = "not-allowed"
                 notificationButton.removeEventListener('click', sendNotification, false)
             }
@@ -87,4 +88,56 @@ const client = (() => {
         .then(requestNotificationPermission)
         // .then(() => console.log("registered service worker and requested notification permission"))
         .catch(err => console.error(err))
+
+
+    // 05.01 - Setup Push
+    const setupPush = () => {
+        let isUserSubscribed = false;
+
+        const unsubscribeUser = () => {
+            console.log("unsubscribing user")
+        }
+
+        function urlB64ToUint8Array(url) {
+            const padding = '='.repeat((4 - url.length % 4) % 4);
+            const base64 = (url + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        // 05.02 - Subscribe user with Public Key
+        const subscribeUser = () => {
+            pushButton.innerText = "DISABLE PUSH NOTIFICATIONS"
+            pushButton.style.backgroundColor = "#ea9085"
+
+            // Note: get using web-push command
+            const applicationServerPublicKey = 'BFCV2QdN0JH3f5EAf6PaA4lEOsKZTcmxI9f4aLyNv3paUF-NOf6dt-6uulkwYaq2q6017X1G3Tga4sKkPVv0gtI';
+            const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+            serviceWorkerRegObject.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            })
+                .then(subscription => {
+                    console.log(subscription)
+                    isUserSubscribed = true
+                    // todo: HTTP POST to save subscription on server
+                })
+                .catch(err => console.err("Failed to subscribe user to Push Service.", err))
+
+        }
+
+        pushButton.addEventListener('click', () => {
+            if (isUserSubscribed) unsubscribeUser()
+            else subscribeUser()
+        })
+    }
+    setupPush()
 })()

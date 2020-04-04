@@ -36,15 +36,24 @@ button {
     margin: 1em;
     height: 50px;
     font-family: 'Lato', sans-serif;
+    padding: 1em;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 10px;
 }
 
 #btn-notify {
     background-color: #844685;
     color: #ffffff;
-    padding: 1em;
-    cursor: pointer;
-    font-size: 1em;
-    border-radius: 10px;
     /* Hide by Default. Only enabled if ServiceWorker is available */
     display: none; 
+}
+
+#btn-push {
+    background-color: #efb1ff;
+}
+
+.disabled {
+    background-color: #4cd3c2;
+    cursor: not-allowed;
 }
