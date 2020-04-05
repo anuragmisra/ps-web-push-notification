@@ -1,6 +1,7 @@
 'use strict';
 
 const client = (() => {
+    let isUserSubscribed = false;
     let serviceWorkerRegObject = undefined;
     const notificationButton = document.getElementById("btn-notify");
     const pushButton = document.getElementById("btn-push");
@@ -8,6 +9,18 @@ const client = (() => {
     const showNotificationButton = () => {
         notificationButton.style.display = "block"
         notificationButton.addEventListener('click', sendNotification)
+    }
+
+    const enablePushNotificationButton = () => {
+        isUserSubscribed = false
+        pushButton.innerText = "ENABLE PUSH NOTIFICATIONS"
+        pushButton.style.backgroundColor = "#efb1ff"
+    }
+
+    const disablePushNotificationButton = () => {
+        isUserSubscribed = true
+        pushButton.innerText = "DISABLE PUSH NOTIFICATIONS"
+        pushButton.style.backgroundColor = "#ea9085"
     }
 
     const sendNotification = () => {
@@ -67,6 +80,13 @@ const client = (() => {
 
             // 03 - Enable Notifications Subscribe Button
             showNotificationButton();
+
+            // 05-04 Enable/Disable Push Button
+            swRegObj.pushManager.getSubscription()
+            .then(subs => {
+                if(subs) disablePushNotificationButton()
+                else enablePushNotificationButton()
+            })
         })
     }
 
@@ -92,7 +112,7 @@ const client = (() => {
 
     // 05.01 - Setup Push
     const setupPush = () => {
-        let isUserSubscribed = false;
+        
 
         // 05.03 - unsubscribe
         const unsubscribeUser = () => {
@@ -101,11 +121,7 @@ const client = (() => {
                 .then(subscription => {
                     if (subscription) return subscription.unsubscribe()
                 })
-                .then(() => {
-                    isUserSubscribed = false
-                    pushButton.innerText = "ENABLE PUSH NOTIFICATIONS"
-                    pushButton.style.backgroundColor = "#efb1ff"
-                })
+                .then(() => enablePushNotificationButton())
                 .catch(err => console.err("Failed to unsubscribe from Push Service.", err))
         }
 
@@ -126,9 +142,6 @@ const client = (() => {
 
         // 05.02 - Subscribe user with Public Key
         const subscribeUser = () => {
-            pushButton.innerText = "DISABLE PUSH NOTIFICATIONS"
-            pushButton.style.backgroundColor = "#ea9085"
-
             // Note: get using web-push command
             const applicationServerPublicKey = 'BM4KIuyRbYzTHmkQ23ooGyXsK1E85C7cNPINtriy2vbz9KX4eLxu_8A-AXz8LUCHqp4vFqFPlmK_o4zS5kCa1Rg';
             const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
@@ -138,7 +151,7 @@ const client = (() => {
             })
                 .then(subscription => {
                     console.log(JSON.stringify(subscription))
-                    isUserSubscribed = true
+                    disablePushNotificationButton()
                     // todo: HTTP POST to save subscription on server
                 })
                 .catch(err => console.error("Failed to subscribe to Push Service.", err))
@@ -146,9 +159,15 @@ const client = (() => {
         }
 
         pushButton.addEventListener('click', () => {
+            serviceWorkerRegObject.pushManager.getSubscription()
+            .then(subs => {
+                if(subs) isUserSubscribed = true
+            })
+
             if (isUserSubscribed) unsubscribeUser()
             else subscribeUser()
         })
+
     }
     setupPush()
 })()
