@@ -29,5 +29,8 @@ self.addEventListener('push', event => {
     const options = { body: transaction.business }
     const transactionType = transaction.type === "deposit" ? '+' : '-'
 
-    self.registration.showNotification(`${transactionType} ` + transaction.amount, options);
+    // https://stackoverflow.com/questions/37902441/what-does-event-waituntil-do-in-service-worker-and-why-is-it-needed
+    event.waitUntil(
+        self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
+    )
 })
