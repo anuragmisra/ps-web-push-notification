@@ -6,6 +6,16 @@ const client = (() => {
     const notificationButton = document.getElementById("btn-notify");
     const pushButton = document.getElementById("btn-push");
 
+    const post = (subscription) => {
+        return fetch('http://localhost:3000/subscribe', {
+            method: 'POST',
+            body: JSON.stringify(subscription),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
+
     const showNotificationButton = () => {
         notificationButton.style.display = "block"
         notificationButton.addEventListener('click', sendNotification)
@@ -151,8 +161,11 @@ const client = (() => {
             })
                 .then(subscription => {
                     console.log(JSON.stringify(subscription))
-                    disablePushNotificationButton()
                     // todo: HTTP POST to save subscription on server
+                    post(subscription)
+
+                    disablePushNotificationButton()
+                    
                 })
                 .catch(err => console.error("Failed to subscribe to Push Service.", err))
 
