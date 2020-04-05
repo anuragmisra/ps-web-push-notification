@@ -8,8 +8,6 @@ const pushSubscription = { "endpoint": "https://fcm.googleapis.com/fcm/send/dygx
 const vapidPublicKey = 'BM4KIuyRbYzTHmkQ23ooGyXsK1E85C7cNPINtriy2vbz9KX4eLxu_8A-AXz8LUCHqp4vFqFPlmK_o4zS5kCa1Rg';
 const vapidPrivateKey = 'uiObz_XpzmYN1WRJcrQsm-EzhfUzqOAoGgilr9A47R0';
 
-const payload = 'Hello from server!';
-
 const options = {
     // gcmAPIKey: 'YOUR_SERVER_KEY',
     TTL: 60,
@@ -22,11 +20,22 @@ const options = {
 
 const randomTransaction = () => faker.helpers.createTransaction();
 
-let f = (transaction) => webPush.sendNotification(
-    pushSubscription,
+let f = (subscriber, transaction) => webPush.sendNotification(
+    subscriber,
     JSON.stringify(transaction),
     options
 );
 
-// f(randomTransaction())
-setInterval(() => f(randomTransaction()), 5000)
+const notify = (subscribers) => {
+    if (subscribers.length < 1) {
+        console.log("No Subscribers to Notify")
+        return
+    }
+    const transaction = randomTransaction()
+    subscribers.forEach((subscriber, id) => f(subscriber, transaction))
+    console.log(`${subscribers.size} subscribers notified.`)
+}
+
+module.exports = {
+    notify: notify
+}

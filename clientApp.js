@@ -1,5 +1,4 @@
 const express = require('express')
-
 const app = express()
 
 // Serve static files from specified directory
