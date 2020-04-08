@@ -23,9 +23,9 @@ self.addEventListener('notificationclick', event => {
         event.waitUntil(
             clients.matchAll().then(cs => {
                 const client = cs.find(c => c.visibilityState === "visible")
-                // console.log(client)
                 if (client !== undefined) {
-                    client.navigate('/');
+                    /* not working */
+                    client.navigate(client.url);
                     client.focus();
                 } else {
                     clients.openWindow('http://localhost:9999')
@@ -38,7 +38,7 @@ self.addEventListener('notificationclick', event => {
 
 self.addEventListener('push', event => {
     const transaction = JSON.parse(event.data.text());
-    console.log(event.data.text())
+    // console.log(event.data.text())
 
     const options = { body: transaction.business }
     const transactionType = transaction.type === "deposit" ? '+' : '-'
