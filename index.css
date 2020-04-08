@@ -52,3 +52,12 @@ button {
 #btn-push {
     background-color: #efb1ff;
 }
+
+#push-notification {
+    margin-top: 2em;
+    padding: 2em;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: aqua;
+}

@@ -5,6 +5,7 @@ const client = (() => {
     let serviceWorkerRegObject = undefined;
     const notificationButton = document.getElementById("btn-notify");
     const pushButton = document.getElementById("btn-push");
+    const pushNotification = document.getElementById("push-notification");
 
     const post = (subscription) => {
         return fetch('http://localhost:3000/subscribe', {
@@ -31,6 +32,18 @@ const client = (() => {
         isUserSubscribed = true
         pushButton.innerText = "DISABLE PUSH NOTIFICATIONS"
         pushButton.style.backgroundColor = "#ea9085"
+    }
+
+    const notifyInApp = (transaction) => {
+        const html = `<div>
+            <div>Amount  :   <b>${transaction.amount}</b></div>
+            <div>Business: <b>${transaction.business}</b></div>
+            <div>Name    :  <b>${transaction.name}</b></div>
+            <div>Type    : <b>${transaction.type}</b></div>
+            <div>Account : <b>${transaction.account}</b></div>
+        </div>
+        `
+        pushNotification.innerHTML = html
     }
 
     const sendNotification = () => {
@@ -93,10 +106,13 @@ const client = (() => {
 
             // 05-04 Enable/Disable Push Button
             swRegObj.pushManager.getSubscription()
-            .then(subs => {
-                if(subs) disablePushNotificationButton()
-                else enablePushNotificationButton()
-            })
+                .then(subs => {
+                    if (subs) disablePushNotificationButton()
+                    else enablePushNotificationButton()
+                })
+
+            // 06-01 Add listener to receive message if client is open
+            navigator.serviceWorker.addEventListener('message', e => notifyInApp(e.data))
         })
     }
 
@@ -122,7 +138,7 @@ const client = (() => {
 
     // 05.01 - Setup Push
     const setupPush = () => {
-        
+
 
         // 05.03 - unsubscribe
         const unsubscribeUser = () => {
@@ -165,7 +181,7 @@ const client = (() => {
                     post(subscription)
 
                     disablePushNotificationButton()
-                    
+
                 })
                 .catch(err => console.error("Failed to subscribe to Push Service.", err))
 
@@ -173,9 +189,9 @@ const client = (() => {
 
         pushButton.addEventListener('click', () => {
             serviceWorkerRegObject.pushManager.getSubscription()
-            .then(subs => {
-                if(subs) isUserSubscribed = true
-            })
+                .then(subs => {
+                    if (subs) isUserSubscribed = true
+                })
 
             if (isUserSubscribed) unsubscribeUser()
             else subscribeUser()

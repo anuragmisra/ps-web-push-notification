@@ -31,6 +31,14 @@ self.addEventListener('push', event => {
 
     // https://stackoverflow.com/questions/37902441/what-does-event-waituntil-do-in-service-worker-and-why-is-it-needed
     event.waitUntil(
-        self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
+        clients.matchAll().then(clients => {
+            console.log(clients)
+            if (clients.length === 0) {
+                self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
+            } else {
+                // Inform the first client
+                clients[0].postMessage(transaction)
+            }
+        })
     )
 })
