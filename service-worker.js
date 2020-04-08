@@ -19,6 +19,20 @@ self.addEventListener('notificationclick', event => {
         clients.openWindow(`https://github.com/${event.notification.data.githubUser}`)
     } else if (event.action === "close") {
         clients.openWindow(`https://giphy.com/gifs/the-secret-life-of-pets-happy-relax-26hisjy85ML01lqH6/fullscreen`)
+    } else if (event.action === "") {
+        event.waitUntil(
+            clients.matchAll().then(cs => {
+                const client = cs.find(c => c.visibilityState === "visible")
+                // console.log(client)
+                if (client !== undefined) {
+                    client.navigate('/');
+                    client.focus();
+                } else {
+                    clients.openWindow('http://localhost:9999')
+                    //event.notification.close()
+                }
+            })
+        )
     }
 })
 
@@ -31,13 +45,13 @@ self.addEventListener('push', event => {
 
     // https://stackoverflow.com/questions/37902441/what-does-event-waituntil-do-in-service-worker-and-why-is-it-needed
     event.waitUntil(
-        clients.matchAll().then(clients => {
-            console.log(clients)
-            if (clients.length === 0) {
+        // 06-01 Only notify if client is away (also see client/index.js)
+        clients.matchAll().then(cs => {
+            if (cs.length === 0) {
                 self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
             } else {
                 // Inform the first client
-                clients[0].postMessage(transaction)
+                cs[0].postMessage(transaction)
             }
         })
     )
