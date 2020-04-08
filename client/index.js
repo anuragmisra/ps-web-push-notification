@@ -43,6 +43,7 @@ const client = (() => {
             <div>Account : <b>${transaction.account}</b></div>
         </div>
         `
+        pushNotification.style.display = "flex"
         pushNotification.innerHTML = html
     }
 
