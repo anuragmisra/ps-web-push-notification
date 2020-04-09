@@ -5,11 +5,12 @@
 
 // 08 - Handle notificationclose and notificationclick events
 self.addEventListener('notificationclose', event => {
-    console.log("notification closed", event)
+    // console.log("notification closed", event)
 })
 
 self.addEventListener('notificationclick', event => {
     // console.log("notification click", event)
+    event.notification.close()
 
     // console.log(`action=${event.action}`)
     // console.log(`data=${JSON.stringify(event.notification.data)}`)
@@ -36,23 +37,17 @@ self.addEventListener('notificationclick', event => {
     }
 })
 
+let count = 0
 self.addEventListener('push', event => {
     const transaction = JSON.parse(event.data.text());
-    // console.log(event.data.text())
 
-    const options = { body: transaction.business }
+    const options = { body: transaction.business, tag: 'id' + count++ }
     const transactionType = transaction.type === "deposit" ? '+' : '-'
 
-    // https://stackoverflow.com/questions/37902441/what-does-event-waituntil-do-in-service-worker-and-why-is-it-needed
-    event.waitUntil(
-        // 06-01 Only notify if client is away (also see client/index.js)
-        clients.matchAll().then(cs => {
-            if (cs.length === 0) {
-                self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
-            } else {
-                // Inform the first client
-                cs[0].postMessage(transaction)
-            }
-        })
-    )
+    console.log(JSON.stringify(options))
+
+    self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
+
 })
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API#Dealing_with_repeated_notifications
