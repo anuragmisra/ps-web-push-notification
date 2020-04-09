@@ -24,11 +24,12 @@ self.addEventListener('notificationclick', event => {
             clients.matchAll().then(cs => {
                 const client = cs.find(c => c.visibilityState === "visible")
                 if (client !== undefined) {
-                    /* not working */
-                    client.navigate(client.url);
+                    // when the tab is open and visible
+                    client.navigate('/hello.html');
                     client.focus();
                 } else {
-                    clients.openWindow('http://localhost:9999')
+                    // when there is no tab opened
+                    clients.openWindow('/hello.html')
                     //event.notification.close()
                 }
             })
@@ -43,16 +44,18 @@ self.addEventListener('push', event => {
     const options = { body: transaction.business }
     const transactionType = transaction.type === "deposit" ? '+' : '-'
 
+    self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
+
     // https://stackoverflow.com/questions/37902441/what-does-event-waituntil-do-in-service-worker-and-why-is-it-needed
-    event.waitUntil(
-        // 06-01 Only notify if client is away (also see client/index.js)
-        clients.matchAll().then(cs => {
-            if (cs.length === 0) {
-                self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
-            } else {
-                // Inform the first client
-                cs[0].postMessage(transaction)
-            }
-        })
-    )
+    // event.waitUntil(
+    //     // 06-01 Only notify if client is away (also see client/index.js)
+    //     clients.matchAll().then(cs => {
+    //         if (cs.length === 0) {
+    //             self.registration.showNotification(`${transactionType} ` + transaction.amount, options)
+    //         } else {
+    //             // Inform the first client
+    //             cs[0].postMessage(transaction)
+    //         }
+    //     })
+    // )
 })
