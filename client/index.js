@@ -47,9 +47,13 @@ const client = (() => {
         pushNotification.innerHTML = html
     }
 
+    let count = 0
     const sendNotification = () => {
         // 05 - Show Text Notification
-        const simpleTextNotification = (reg => reg.showNotification("Yay! It works!"))
+        // const simpleTextNotification = (reg => reg.showNotification("Yay! It works!"))
+
+        // 06-01: Using Tag to group
+        const simpleTextNotification = (reg => reg.showNotification("Count=" + count++, { tag: "id1" }))
 
         // 06 - Notification with Image
         const imageWithTextNotification = (reg) => {
@@ -75,7 +79,7 @@ const client = (() => {
         }
 
         navigator.serviceWorker.getRegistration()
-            .then(registration => imageWithTextNotification(registration))
+            .then(registration => simpleTextNotification(registration))
     }
 
     const checkNotificationsSupport = () => {
