@@ -35,6 +35,11 @@ self.addEventListener('notificationclick', event => {
             })
         )
     }
+
+    // 06-03 close all notifications on click of one
+    self.registration.getNotifications().then(ns => {
+        ns.forEach(n => n.close())
+    })
 })
 
 self.addEventListener('push', event => {
